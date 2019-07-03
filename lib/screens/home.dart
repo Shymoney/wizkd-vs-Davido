@@ -1,0 +1,85 @@
+import 'package:flutter/material.dart';
+import '../data.dart';
+
+class Home extends StatelessWidget{
+
+  List<Map<String, Object>> data = Data().data;
+
+  @override
+  Widget build(BuildContext context){
+
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (BuildContext context, int index){
+        return ArtistSelectionBox(data[index]);
+      },
+    );
+
+  }
+}
+
+
+class ArtistSelectionBox extends StatelessWidget{
+
+Map<String, Object> data;
+ArtistSelectionBox(this.data);
+
+  @override
+  Widget build(BuildContext context){
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(bottom:10.0, top: 10.0),
+          height: 150.0,
+          width: 400.0,
+          color: Colors.white,
+          padding: EdgeInsets.all(0.0),
+          child:
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(top: 20.0,bottom: 20.0),
+                    margin:EdgeInsets.only(top: 5.0, left:10),
+                    child: Image.asset(this.data["image"], fit: BoxFit.fill),
+                    color: this.data["color"],
+                  )
+                ),
+                Expanded(
+                  child: Container(
+                    padding:  EdgeInsets.only(top: 20.0, bottom: 20.0),
+                    margin:EdgeInsets.only(top: 5.0, left:10),
+                    color: Colors.white,
+                    child: Column(
+                      children: <Widget>[
+                        Text(this.data["name"],textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight:FontWeight.bold
+                          ),
+                        ),
+                        Text(this.data["song-count"].toString()+ " songs",
+                          textAlign: TextAlign.left,
+
+                        )
+                      ]
+                    ),
+                  ),
+                ),
+              ],
+            ),
+        ),
+        Container(
+          color: Colors.white,
+          padding: EdgeInsets.only(left:10.0, right: 10.0),
+          child: Text(this.data["description"],
+            style:TextStyle(
+              color: Colors.grey
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+}
