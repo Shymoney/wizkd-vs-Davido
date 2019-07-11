@@ -16,22 +16,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: _title,
-      home: MyStatelessWidget(),
+      home: Landing(),
       routes: Router(context).routes()
     );
   }
 }
 
 /// This is the stateless widget that the main application instantiates.
-class MyStatelessWidget extends StatelessWidget {
-  MyStatelessWidget({Key key}) : super(key: key);
+class Landing extends StatelessWidget {
+ Landing({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Home(),
       appBar: AppBar(
-        title: Text('Ready, Set, Shop!'),
+        title: Text('Wizkid vs Davido'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.multiline_chart),

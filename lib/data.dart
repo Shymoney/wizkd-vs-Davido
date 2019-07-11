@@ -32,63 +32,49 @@ class Data{
     }
   ];
 
-  List<Map<String, Object>> wizkidSlimProfile =[{
+  Map<String, Object> wizkidSlimProfile ={
     "artist":"Wizkid",
     "song-count":21,
     "total-global-plays":1221,
     "total-personal-plays":12,
     "image":"assets/wizkid.png"
-  }];
+  };
 
   List<Map<String, Object>> wizkidSongs = [
     {
-      "artist":"Wizkid",
       "song":"Jaiye Jaiye",
-      "total-play":212,
     },
     {
-      "artist":"Wizkid",
       "song":"Ayo",
-      "total-play":212,
     },
     {
-      "artist":"Ojuelegba",
-      "total-play":212,
+      "song":"Ojuelegba",
     },
     {
-      "artist":"Wizkid",
       "song":"Matter",
-      "total-play":212,
     }
   ];
 
-  List<Map<String, Object>> davidoSlimProfile =[{
+Map<String, Object> davidoSlimProfile ={
     "artist":"Wizkid",
     "song-count":21,
     "total-global-plays":1221,
     "total-personal-plays":12,
-    "image":"assets/wizkid.png"
-  }];
+    "image":"assets/davido2.png"
+  };
 
   List<Map<String, Object>> davidoSongs = [
     {
-      "artist":"Wizkid",
-      "song":"Jaiye Jaiye",
-      "total-play":212,
+      "song":"The sound",
     },
     {
-      "artist":"Wizkid",
       "song":"Ayo",
-      "total-play":212,
     },
     {
-      "artist":"Ojuelegba",
-      "total-play":212,
+      "song":"Fall",
     },
     {
-      "artist":"Wizkid",
-      "song":"Matter",
-      "total-play":212,
+      "song":"Gobe",
     }
   ];
 }
