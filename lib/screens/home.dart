@@ -78,7 +78,7 @@ class ArtistHeader extends StatelessWidget{
     return Container(
       margin: EdgeInsets.only(bottom:10.0, top: 10.0),
       height: 150.0,
-      width: 400.0,
+      width: MediaQuery.of(context).size.width,
       color: Colors.white,
       padding: EdgeInsets.all(0.0),
       child:
@@ -88,7 +88,7 @@ class ArtistHeader extends StatelessWidget{
               child: Container(
                 padding: EdgeInsets.only(top: 20.0,bottom: 20.0),
                 margin:EdgeInsets.only(top: 5.0, left:10),
-                child: Image.asset(this.name, fit: BoxFit.fill),
+                child: Image.asset(image, fit: BoxFit.fill),
                 color: this.color,
               )
           ),

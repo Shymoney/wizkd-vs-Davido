@@ -4,16 +4,16 @@ import 'package:wizkid_vs_davido/screens/artistShow.dart';
 
 class Router{
 
-  final BuildContext context;
-  static final String index = "/";
+  BuildContext context;
+//  static final String index = "/home";
   static final String artistShow = "/artist";
 
   Router(this.context);
   
-  Map<String, Object> routes(){
-    
+  Map<String, WidgetBuilder>routes(){
+
     return{
-      Router.index: (context) => Home(),
+//      Router.index: (context) => Home(),
 
       Router.artistShow: (context)=>ShowArtist(),
     };

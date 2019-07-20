@@ -8,24 +8,83 @@ class ShowArtist extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    final ArtistShowArgument argument = ModalRoute.of(context).settings.arguments;
-    if(argument.artist == "wizkid"){
-        Map<String, String> data = Data().wizkidSlimProfile;
-        List<Map<String, String>> songs = Data().wizkidSongs;
-    }
-    else if(argument.artist == "davido"){
-      Map<String, String> data = Data().davidoSlimProfile;
-      List<Map<String, String>> songs = Data().davidoSongs;
-    }
-    return Row(
-      children: <Widget>[
-        ArtistCardHeader(
-        name: data["artist"].toString(),
-        songCount: data["song-count"],
-        image: data["image"].toString(),
 
-    ),
-        ListView.builder(itemBuilder: )
+    return Scaffold(
+      body: ShowArtistCollection(),
+      appBar: AppBar(
+        title: Text('Wizkid vs Davido'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.multiline_chart),
+            onPressed: () {
+              // Implement navigation to shopping cart page here...
+              print('Wizkid VS Davido');
+            },
+          ),
+        ],
+
+
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: IconButton(
+          icon: Icon(Icons.play_arrow, color: Colors.white,)
+        )
+      )
+    );
+
+  }
+}
+
+// ignore: must_be_immutable
+class ShowArtistCollection extends StatelessWidget{
+  Map<String, Object> data;
+  List<String> songs;
+  String outcome ;
+  List<Widget> songList;
+  @override
+  Widget build(BuildContext context) {
+
+    final ArtistShowArgument argument = ModalRoute.of(context).settings.arguments;
+    final String artist = argument.artist.toLowerCase();
+    if(artist == "wizkid"){
+      data = Data.wizkidSlimProfile;
+      songs = Data.wizkidSongs;
+      outcome = "wizkid";
+    }
+    else if(artist == "davido"){
+       data = Data.davidoSlimProfile;
+       songs = Data.davidoSongs;
+       outcome = "davido";
+
+    }else if(artist == "shuffle"){
+      data = Data.shuffleSlimProfile;
+      songs = Data.wizkidSongs;
+      songs.addAll(Data.davidoSongs);
+      songs.shuffle();
+      outcome = "shuffle";
+
+    }
+
+
+
+    return Column(
+      children: <Widget>[
+
+        Container(
+          child: ArtistCardHeader(
+          name: outcome,
+          songCount: data["song-count"] as int,
+          image: data["image"].toString(),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+              itemCount: songs.length,
+              itemBuilder: (BuildContext context, int index){
+                return ArtistSong(song: songs[index], index:index + 1);
+              }
+          ),
+        )
       ],
     );
   }
@@ -40,7 +99,7 @@ class ArtistCardHeader extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: <Widget>[
         ArtistHeader(
           name: this.name,
@@ -54,32 +113,65 @@ class ArtistCardHeader extends StatelessWidget{
 }
 
 // ignore: must_be_immutable
-class ArtistSongs extends StatelessWidget{
-List<Map<String, String>> data;
-ArtistSongs({this.data});
+class ArtistSong extends StatelessWidget{
+String song;
+int index;
+IconData playState = Icons.play_arrow;
 
-  Widget song({String song})
+
+ArtistSong({this.song, this.index});
+
+  @override
+  Widget build(BuildContext context)
   {
     return Container(
-      child: Text(song,
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 20.0
-        ),
+      padding: EdgeInsets.only(left: 20.0, top: 10.0),
+      margin: EdgeInsets.only(bottom: 5.0),
+      decoration: new BoxDecoration(
+          color: Colors.white,
+          border: new Border(
+            top:BorderSide(color: Colors.grey, width: 0.7),
+//            bottom:BorderSide(color: Colors.grey, width: 0.7)
+          )
       ),
-      height: 200.0,
-      color: Colors.lightBlueAccent,
+      child: Row(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right:8.0),
+            child:IconButton(
+              icon: Icon(
+                  this.playState,
+                  color:
+                  Colors.black54,size: 30.0),
+              onPressed: () {
+                changePlayState();
+              },
+            ),
+          ),
+          Container(
+            child: Text(this.index.toString() +". "+ this.song,
+              textAlign: TextAlign.start,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18.0
+              ),
+            ),
+          ),
+        ],
+      ),
+      height: 60.0,
     );
   }
 
-  @override
-  Widget build(BuildContext context){
-    return ListView.builder(
-      itemCount: data.length,
-      itemBuilder: (BuildContext context, int index){
-        return song(song: data[index]["song"]);
-      },
-    );
+  void changePlayState(){
+
+    if(this.playState == Icons.play_arrow){
+      this.playState = Icons.pause;
+    }else{
+      this.playState = Icons.play_arrow;
+    }
   }
 
 }
