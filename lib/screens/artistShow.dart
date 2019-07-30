@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:wizkid_vs_davido/screens/home.dart';
 import 'package:wizkid_vs_davido/data.dart';
 import 'package:wizkid_vs_davido/arguments.dart';
+import 'package:wizkid_vs_davido/state_management/playState.dart';
+import 'package:provider/provider.dart';
 
 class ShowArtist extends StatelessWidget{
 
@@ -68,25 +70,25 @@ class ShowArtistCollection extends StatelessWidget{
 
 
     return Column(
-      children: <Widget>[
+        children: <Widget>[
 
-        Container(
-          child: ArtistCardHeader(
-          name: outcome,
-          songCount: data["song-count"] as int,
-          image: data["image"].toString(),
+          Container(
+            child: ArtistCardHeader(
+            name: outcome,
+            songCount: data["song-count"] as int,
+            image: data["image"].toString(),
+            ),
           ),
-        ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: songs.length,
-              itemBuilder: (BuildContext context, int index){
-                return ArtistSong(song: songs[index], index:index + 1);
-              }
+          Expanded(
+            child: ListView.builder(
+                itemCount: songs.length,
+                itemBuilder: (BuildContext context, int index){
+                  return ArtistSongParent(song: songs[index], index:index + 1);
+                }
+            ),
           ),
-        )
-      ],
-    );
+        ],
+      );
   }
 }
 
@@ -113,6 +115,20 @@ class ArtistCardHeader extends StatelessWidget{
 }
 
 // ignore: must_be_immutable
+class ArtistSongParent extends StatelessWidget{
+  String song;
+  int index;
+
+  ArtistSongParent({this.song, this.index});
+  @override
+   Widget build (BuildContext context){
+     return ChangeNotifierProvider<PlayState>(
+       builder: (_)=>PlayState(Icons.play_arrow),
+      child: ArtistSong(song: this.song, index: this.index)
+     );
+  }
+}
+// ignore: must_be_immutable
 class ArtistSong extends StatelessWidget{
 String song;
 int index;
@@ -120,58 +136,52 @@ IconData playState = Icons.play_arrow;
 
 
 ArtistSong({this.song, this.index});
-
   @override
   Widget build(BuildContext context)
-  {
-    return Container(
-      padding: EdgeInsets.only(left: 20.0, top: 10.0),
-      margin: EdgeInsets.only(bottom: 5.0),
-      decoration: new BoxDecoration(
-          color: Colors.white,
-          border: new Border(
-            top:BorderSide(color: Colors.grey, width: 0.7),
+{
+  final playStateObject = Provider.of<PlayState>(context);
+  return ChangeNotifierProvider<PlayState>(
+    child: Container(
+        padding: EdgeInsets.only(left: 20.0, top: 10.0),
+        margin: EdgeInsets.only(bottom: 5.0),
+        decoration: new BoxDecoration(
+            color: Colors.white,
+            border: new Border(
+              top:BorderSide(color: Colors.grey, width: 0.7),
 //            bottom:BorderSide(color: Colors.grey, width: 0.7)
-          )
-      ),
-      child: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right:8.0),
-            child:IconButton(
-              icon: Icon(
-                  this.playState,
-                  color:
-                  Colors.black54,size: 30.0),
-              onPressed: () {
-                changePlayState();
-              },
-            ),
-          ),
-          Container(
-            child: Text(this.index.toString() +". "+ this.song,
-              textAlign: TextAlign.start,
-              softWrap: false,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.0
+            )
+        ),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right:8.0),
+              child:IconButton(
+                icon: Icon(
+                    playStateObject.getPlay(),
+                    color:
+                    Colors.black54,size: 30.0),
+                onPressed: () {
+                  playStateObject.changePlayState();
+                },
               ),
             ),
-          ),
-        ],
+            Container(
+              child: Text(this.index.toString() +". "+ this.song,
+                textAlign: TextAlign.start,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0
+                ),
+              ),
+            ),
+          ],
+        ),
+        height: 60.0,
       ),
-      height: 60.0,
-    );
+  );
   }
 
-  void changePlayState(){
-
-    if(this.playState == Icons.play_arrow){
-      this.playState = Icons.pause;
-    }else{
-      this.playState = Icons.play_arrow;
-    }
-  }
 
 }
