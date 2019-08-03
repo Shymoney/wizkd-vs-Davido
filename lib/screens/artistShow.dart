@@ -28,9 +28,8 @@ class ShowArtist extends StatelessWidget{
 
       ),
       floatingActionButton: FloatingActionButton(
-        child: IconButton(
-          icon: Icon(Icons.play_arrow, color: Colors.white,)
-        )
+        child: Icon(Icons.play_arrow, color: Colors.white),
+        onPressed: () {},
       )
     );
 
@@ -139,47 +138,52 @@ ArtistSong({this.song, this.index});
   @override
   Widget build(BuildContext context)
 {
-  final playStateObject = Provider.of<PlayState>(context);
+//  final playStateObject = ;
   return ChangeNotifierProvider<PlayState>(
-    child: Container(
-        padding: EdgeInsets.only(left: 20.0, top: 10.0),
-        margin: EdgeInsets.only(bottom: 5.0),
-        decoration: new BoxDecoration(
-            color: Colors.white,
-            border: new Border(
-              top:BorderSide(color: Colors.grey, width: 0.7),
+    builder: (_) => Provider.of<PlayState>(context),
+    child: Consumer(
+      builder: (BuildContext context, PlayState playStateObject, _){
+        return Container(
+          padding: EdgeInsets.only(left: 20.0, top: 10.0),
+          margin: EdgeInsets.only(bottom: 5.0),
+          decoration: new BoxDecoration(
+              color: Colors.white,
+              border: new Border(
+                top:BorderSide(color: Colors.grey, width: 0.7),
 //            bottom:BorderSide(color: Colors.grey, width: 0.7)
-            )
-        ),
-        child: Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right:8.0),
-              child:IconButton(
-                icon: Icon(
-                    playStateObject.getPlay(),
-                    color:
-                    Colors.black54,size: 30.0),
-                onPressed: () {
-                  playStateObject.changePlayState();
-                },
-              ),
-            ),
-            Container(
-              child: Text(this.index.toString() +". "+ this.song,
-                textAlign: TextAlign.start,
-                softWrap: false,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18.0
+              )
+          ),
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right:8.0),
+                child:IconButton(
+                  icon: Icon(
+                      playStateObject.getPlay(),
+                      color:
+                      Colors.black54,size: 30.0),
+                  onPressed: () {
+                    playStateObject.changePlayState();
+                  },
                 ),
               ),
-            ),
-          ],
-        ),
-        height: 60.0,
-      ),
+              Container(
+                child: Text(this.index.toString() +". "+ this.song,
+                  textAlign: TextAlign.start,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18.0
+                  ),
+                ),
+              ),
+            ],
+          ),
+          height: 60.0,
+        );
+      },
+    ),
   );
   }
 
