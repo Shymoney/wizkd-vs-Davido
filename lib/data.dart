@@ -32,58 +32,58 @@ class Data{
     }
   ];
 
-  static Map<String, Object> wizkidSlimProfile ={
+  /*
+  * Wizkid Details
+  * */
+  static Map<String, Object> wizkidSlimProfile =
+  {
     "artist":"Wizkid",
-    "song-count":261,
+    "song-count":2,
     "total-global-plays":1221,
     "total-personal-plays":12,
     "image":"assets/wizkid.png"
   };
 
-  static List<String> wizkidSongs =
+  static List<Map<String, String>> wizkidSongs =
   [
-    "Ojuelegab",
-    "Matter",
-    "Jaiye Jaiye",
-    "Gucci Snake",
-    "Ojuelegab",
-    "Matter",
-    "Jaiye Jaiye",
-    "Gucci Snake",
-    "Ojuelegab",
-    "Matter",
-    "Jaiye Jaiye",
-    "Gucci Snake",
-
+    {
+      "song":"Back to the Matter ",
+      "path":"assets/music/wizkid-matteer.mp3"
+    },
+    {
+      "song":"Ojuelegba",
+      "path":"assets/music/wizkid-ojuelegba.mp3"
+    }
   ];
 
-static Map<String, Object> davidoSlimProfile ={
-    "artist":"Wizkid",
-    "song-count":212,
-    "total-global-plays":1221,
-    "total-personal-plays":12,
-    "image":"assets/davido2.png"
+  /*
+  * Davido SlimProfile
+  * */
+  static Map<String, Object> davidoSlimProfile =
+  {
+      "artist":"Wizkid",
+      "song-count":2,
+      "total-global-plays":1221,
+      "total-personal-plays":12,
+      "image":"assets/davido2.png"
   };
 
-  static List<String> davidoSongs = [
-     "The sound",
-      "Ayo",
-      "Fall",
-     "Gobe",
-     "The sound The",
-     "Ayo",
-     "Fall",
-     "Gobe",
-     "The sound",
-     "Ayo",
-     "Fall",
-     "Gobe",
-
+  static List<Map<String, String>> davidoSongs =
+  [
+    {
+      "song":"Aye",
+      "path":"assets/music/davido-aye.mp3"
+    },
+    {
+      "song":"The Sound",
+      "path":"assets/music/davido-the-sound.mp3"
+    }
   ];
 
-  static Map<String, Object> shuffleSlimProfile ={
+  static Map<String, Object> shuffleSlimProfile =
+  {
     "artist":"Shuffle",
-    "song-count": davidoSongs.length + wizkidSongs.length,
+    "song-count":4,
     "image":"assets/shuffle.png"
   };
 

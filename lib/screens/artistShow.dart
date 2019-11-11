@@ -1,4 +1,6 @@
 
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:wizkid_vs_davido/screens/home.dart';
 import 'package:wizkid_vs_davido/data.dart';
@@ -39,7 +41,7 @@ class ShowArtist extends StatelessWidget{
 // ignore: must_be_immutable
 class ShowArtistCollection extends StatelessWidget{
   Map<String, Object> data;
-  List<String> songs;
+  List<Map<String, String>> songs;
   String outcome ;
   List<Widget> songList;
   @override
@@ -68,26 +70,29 @@ class ShowArtistCollection extends StatelessWidget{
 
 
 
-    return Column(
-        children: <Widget>[
+    return ChangeNotifierProvider<GlobalPlayState>(
+      builder: (context) => GlobalPlayState(),
+      child: Column(
+          children: <Widget>[
 
-          Container(
-            child: ArtistCardHeader(
-            name: outcome,
-            songCount: data["song-count"] as int,
-            image: data["image"].toString(),
+            Container(
+              child: ArtistCardHeader(
+              name: outcome,
+              songCount: data["song-count"] as int,
+              image: data["image"].toString(),
+              ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-                itemCount: songs.length,
-                itemBuilder: (BuildContext context, int index){
-                  return ArtistSongParent(song: songs[index], index:index + 1);
-                }
+            Expanded(
+              child: ListView.builder(
+                  itemCount: songs.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return ArtistSongParent(song: songs[index]["song"], index:index + 1, songPath:songs[index]["path"]);
+                  }
+              ),
             ),
-          ),
-        ],
-      );
+          ],
+        ),
+    );
   }
 }
 
@@ -117,13 +122,14 @@ class ArtistCardHeader extends StatelessWidget{
 class ArtistSongParent extends StatelessWidget{
   String song;
   int index;
+  String songPath;
 
-  ArtistSongParent({this.song, this.index});
+  ArtistSongParent({this.song, this.index, this.songPath});
   @override
    Widget build (BuildContext context){
-     return ChangeNotifierProvider<PlayState>(
-       builder: (_)=>PlayState(Icons.play_arrow),
-      child: ArtistSong(song: this.song, index: this.index)
+    return ChangeNotifierProvider<LocalPlayState>(
+       builder: (_)=>LocalPlayState(Icons.play_arrow),
+      child: ArtistSong(song: this.song, index: this.index, songPath: this.songPath,)
      );
   }
 }
@@ -131,56 +137,81 @@ class ArtistSongParent extends StatelessWidget{
 class ArtistSong extends StatelessWidget{
 String song;
 int index;
-IconData playState = Icons.play_arrow;
+String songPath;
 
 
-ArtistSong({this.song, this.index});
+ArtistSong({this.song, this.index, this.songPath});
+  IconData _play;
+  Future<AudioPlayer> currentActiveSong ;
+  AudioCache audioPlayerCache = AudioCache(
+    fixedPlayer: new AudioPlayer()
+  );
+
+
   @override
   Widget build(BuildContext context)
 {
-//  final playStateObject = ;
-  return ChangeNotifierProvider<PlayState>(
-    builder: (_) => Provider.of<PlayState>(context),
+  var globalPlayState  = Provider.of<GlobalPlayState>(context);
+  var localPlayState  = Provider.of<LocalPlayState>(context);
+  _play = localPlayState.play;
+
+  if(globalPlayState.except == this.index)
+    {
+      _play = localPlayState.play;
+     this.currentActiveSong = audioPlayerCache.play(this.songPath);
+    }
+  else{
+    _play = globalPlayState.play;
+  }
+  return ChangeNotifierProvider<LocalPlayState>(
+    builder: (_) => Provider.of<LocalPlayState>(context),
     child: Consumer(
-      builder: (BuildContext context, PlayState playStateObject, _){
-        return Container(
-          padding: EdgeInsets.only(left: 20.0, top: 10.0),
-          margin: EdgeInsets.only(bottom: 5.0),
-          decoration: new BoxDecoration(
-              color: Colors.white,
-              border: new Border(
-                top:BorderSide(color: Colors.grey, width: 0.7),
+      builder: (BuildContext context, LocalPlayState playStateObject, _){
+        return GestureDetector(
+          onTap: (){
+            localPlayState.changePlayState();
+            globalPlayState.except = this.index;
+          },
+          child: Container(
+            padding: EdgeInsets.only(left: 20.0, top: 10.0),
+            margin: EdgeInsets.only(bottom: 5.0),
+            decoration: new BoxDecoration(
+                color: Colors.white,
+                border: new Border(
+                  top:BorderSide(color: Colors.grey, width: 0.7),
 //            bottom:BorderSide(color: Colors.grey, width: 0.7)
-              )
-          ),
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right:8.0),
-                child:IconButton(
-                  icon: Icon(
-                      playStateObject.getPlay(),
-                      color:
-                      Colors.black54,size: 30.0),
-                  onPressed: () {
-                    playStateObject.changePlayState();
-                  },
-                ),
-              ),
-              Container(
-                child: Text(this.index.toString() +". "+ this.song,
-                  textAlign: TextAlign.start,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18.0
+                )
+            ),
+            child:  Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(right:8.0),
+                  child:IconButton(
+                    icon: Icon(
+                        this._play,
+                        color:
+                        Colors.black54,size: 30.0),
+                    onPressed: () {
+                      localPlayState.changePlayState();
+                      globalPlayState.except = this.index;
+                    },
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  child: Text(this.index.toString() +". "+ this.song,
+                    textAlign: TextAlign.start,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18.0
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            height: 60.0,
           ),
-          height: 60.0,
         );
       },
     ),

@@ -1,44 +1,67 @@
 import 'package:flutter/material.dart';
 
 
-class Counter with ChangeNotifier {
-  int _counter;
+class GlobalPlayState with ChangeNotifier{
 
-  Counter(this._counter);
+  IconData _playState;
+  int _changeAllExcept;
 
-  getCounter() => _counter;
-  setCounter(int counter) => _counter = counter;
+  GlobalPlayState(){
+    this.play = Icons.play_arrow;
+  }
 
-  void increment() {
-    _counter++;
+  get except => _changeAllExcept;
+
+  get play => _playState;
+
+  set play(IconData play)
+  {
+    _playState = play;
     notifyListeners();
   }
 
-  void decrement() {
-    _counter--;
+  set except(int except)
+  {
+    _changeAllExcept = except;
     notifyListeners();
   }
+
+  void changePlayState()
+  {
+    if(this._playState == Icons.play_arrow)
+    {
+      this.play = Icons.pause;
+    }
+    else{
+      this.play = Icons.play_arrow;
+    }
+
+  }
+
+
 }
 
-class PlayState with ChangeNotifier{
+class LocalPlayState with ChangeNotifier{
   IconData _playState;
 
-  PlayState(this._playState);
+  LocalPlayState(this._playState);
 
-  getPlay() => _playState;
+  get play  => _playState;
 
-  setPlay(IconData play) => _playState = play;
+  set play(IconData play){
+    _playState = play;
+    notifyListeners();
+  }
+
 
   void changePlayState()
   {
     if(this._playState == Icons.play_arrow)
       {
-        this._playState = Icons.pause;
-        notifyListeners();
+        this.play = Icons.pause;
       }
       else{
-        _playState = Icons.play_arrow;
-        notifyListeners();
+        this.play = Icons.play_arrow;
     }
 
   }
